@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>Joy</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Example page of use pure Javascript JoyStick">
+    <meta name="author" content="Roberto D'Amico">
+    <!-- Added the Bootstrap CDN -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="switch.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .row {
+            display: inline-flex;
+            clear: both;
+        }
+
+        .columnLateral {
+            float: left;
+            width: 15%;
+            min-width: 300px;
+        }
+
+        .columnCetral {
+            float: left;
+            width: 70%;
+            min-width: 300px;
+        }
+
+        #joy2Div {
+            width: 200px;
+            height: 200px;
+            margin: 50px
+        }
+
+        #joystick {
+            border: 1px solid #FF0000;
+        }
+
+        #joystick2 {
+            border: 1px solid #0000FF;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>MQTT Joy Stick </h1>
+
+        <center>
+            <h4 id='status-header'>Connecting to broker...</h4>
+
+            <div id="joy1Div" style="width:200px;height:200px;margin:50px"></div>
+            Direzione:<br></Direzione:br><input id="joy1Direzione" type="text" /><br />
+
+        </center>
+
+
+        <script src="joy.js"></script>
+        <script src="./browserMqtt.js"></script>
+        <script type="text/javascript">
+            var broker = 'wss://mqtt.eclipse.org:443/mqtt';
+            var client = mqtt.connect(broker);
+            window.onload = () => {
+                client.on('connect', () => {
+                    console.log("connected");
+                    document.getElementById("status-header").innerText = `Connected to ${broker}`;
+                })
+            }
+            var Joy1 = new JoyStick('joy1Div');
+            var joy1Direzione = document.getElementById("joy1Direzione");
+            let oldDirection = "N";
+
+            setInterval(function () { 
+                joy1Direzione.value = Joy1.GetDir();
+                console.log("I am running!");
+                // client.publish("my topic",Joy1.GetDir()); 
+                if(oldDirection != Joy1.GetDir()){
+                    client.publish("my topic",Joy1.GetDir()); 
+                    oldDirection = Joy1.GetDir();
+                }
+                
+            }, 50);
+        </script>
+</body>
+
+</html>

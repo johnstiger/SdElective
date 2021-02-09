@@ -18,3 +18,8 @@ bin-release/
 # information for Eclipse / Flash Builder.
 /node_modules
 /package-lock.json
+/mqttjs-javascript_resources
+/package.json
+/username-paho-mqtt
+/ChatApp
+/ChatBox
